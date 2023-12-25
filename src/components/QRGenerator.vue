@@ -8,8 +8,8 @@
         <input type="text" v-model="textVal" placeholder="Enter text or url" />
         <button @click="generateQR()">Generate QR</button>
       </div>
-      <div class="qr-code">
-        <img src="" alt="qr-code" />
+      <div class="qr-code" v-if="this.srcVal != '' && this.textVal != ''">
+        <img :src="this.srcVal" alt="qr-code" />
       </div>
     </div>
   </div>
@@ -21,13 +21,48 @@ export default {
   components: {},
   data() {
     return {
-        textVal: "",
+      textVal: "",
+      srcVal: "",
     };
   },
   methods: {
-    generateQR() {
-        console.log("Hi I am inside function");
-    }
+    async generateQR() {
+      console.log("Hi I am inside function");
+      if (this.textVal === "") {
+        this.srcVal = "";
+        return;
+      }
+      // Assuming this.textVal contains the data for the QR code
+      const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
+        this.textVal
+      )}`;
+
+      // Fetch the image
+      try {
+        const response = await fetch(qrCodeUrl);
+
+        // Check if the request was successful (status code 200)
+        if (response.ok) {
+          // Convert the response to a blob
+          const blob = await response.blob();
+          console.log(blob);
+          // Create a data URL for the blob
+          const dataUrl = URL.createObjectURL(blob);
+          console.log(dataUrl);
+          console.log(document.getElementById("qrcodeimg"));
+          // Set the src attribute of the image element
+          this.srcVal = dataUrl;
+        } else {
+          console.error(
+            "Failed to fetch QR code image:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching QR code image:", error.message);
+      }
+    },
   },
 };
 </script>
@@ -42,7 +77,7 @@ export default {
   font-family: "Poppins", sans-serif;
 }
 .wrapper {
-  height: 265px;
+  max-height: 500px;
   max-width: 410px;
   background: #fff;
   border-radius: 7px;
@@ -83,9 +118,9 @@ export default {
   background: #c62f2ff5;
 }
 .qr-code {
-  opacity: 0;
   display: flex;
   padding: 33px 0;
+  margin-bottom: 20px;
   border-radius: 5px;
   align-items: center;
   pointer-events: none;
