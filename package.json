@@ -1,7 +1,7 @@
 {
   "name": "ui-lib-utils",
-  "description": "A vue package to create elegant buttons and qr code generator component.",
-  "version": "0.1.4",
+  "description": "QR Code Generator and Downloader",
+  "version": "0.2.0",
   "private": false,
   "author": {
     "name": "vipul",
