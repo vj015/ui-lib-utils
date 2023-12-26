@@ -1,7 +1,7 @@
 {
   "name": "ui-lib-utils",
   "description": "A vue package to create elegant buttons and qr code generator component.",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "private": false,
   "author": {
     "name": "vipul",
@@ -10,14 +10,15 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-library": "vue-cli-service build --target lib --name ui-lib-utils ./src/install.js"
-  },
+    "build-library": "vue-cli-service build --target lib --name ui-lib-utils ./src/install.js && cp ./dist/ui-lib-utils.css ./dist/ui-lib-utils.css"
+},
   "files": [
     "dist/*",
     "src/*",
     "public/*",
     "*.json",
-    "*.js"
+    "*.js",
+    "dist/*.css"
   ],
   "main" : "./dist/ui-lib-utils.common.js",
   "dependencies": {
