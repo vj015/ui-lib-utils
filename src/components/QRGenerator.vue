@@ -6,10 +6,13 @@
       </div>
       <div class="form">
         <input type="text" v-model="textVal" placeholder="Enter text or url" />
-        <button @click="generateQR()">{{ buttonLabel }}</button>
+        <button @click="generateQR()" v-if="this.hide">
+          {{ buttonLabel }}
+        </button>
       </div>
       <div class="qr-code" v-if="this.srcVal != '' && this.textVal != ''">
-        <img :src="this.srcVal" alt="qr-code" />
+        <img :src="this.srcVal" alt="qr-code" id="qrcode_img" />
+        <button class="down" @click="downloadQR()">{{ "Download" }}</button>
       </div>
     </div>
   </div>
@@ -24,6 +27,7 @@ export default {
       textVal: "",
       srcVal: "",
       loading: false,
+      hide: true,
     };
   },
   computed: {
@@ -33,11 +37,12 @@ export default {
   },
   methods: {
     async generateQR() {
-      this.loading = true;
       if (this.textVal === "") {
         this.srcVal = "";
         return;
       }
+      this.loading = true;
+      this.hide = false;
       // Assuming this.textVal contains the data for the QR code
       const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
         this.textVal
@@ -68,11 +73,18 @@ export default {
         console.error("Error fetching QR code image:", error.message);
       }
     },
+    downloadQR() {
+      const link = document.createElement("a");
+      link.href = this.srcVal;
+      link.download = `${this.textVal}` + ".png";
+      link.click();
+    },
   },
   watch: {
     textVal(newVal) {
       if (newVal === "") {
         this.srcVal = "";
+        this.hide = true;
       }
     },
   },
@@ -129,8 +141,22 @@ export default {
   font-size: 17px;
   background: #c62f2ff5;
 }
+.down {
+  color: #fff;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 17px;
+  background: #c62f2ff5;
+  width: 90%;
+  height: 55px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  transition: 0.1s ease;
+}
 .qr-code {
   display: flex;
+  flex-direction: column;
   padding: 33px 0;
   margin-bottom: 20px;
   border-radius: 5px;
