@@ -12,7 +12,9 @@
       </div>
       <div class="qr-code" v-if="this.srcVal != '' && this.textVal != ''">
         <img :src="this.srcVal" alt="qr-code" id="qrcode_img" />
-        <button class="down" @click="downloadQR()">{{ "Download" }}</button>
+      </div>
+      <div>
+        <button class="down" @click="downloadQR()" v-if="this.srcVal != ''">{{ "Download" }}</button>
       </div>
     </div>
   </div>
@@ -144,10 +146,11 @@ export default {
 .down {
   color: #fff;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 0px;
+  margin-bottom: 5px;
   font-size: 17px;
   background: #c62f2ff5;
-  width: 90%;
+  width: 100%;
   height: 55px;
   border: none;
   outline: none;
