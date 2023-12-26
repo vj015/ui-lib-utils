@@ -13,8 +13,9 @@
       <div class="qr-code" v-if="this.srcVal != '' && this.textVal != ''">
         <img :src="this.srcVal" alt="qr-code" id="qrcode_img" />
       </div>
-      <div>
-        <button class="down" @click="downloadQR()" v-if="this.srcVal != ''">{{ "Download" }}</button>
+      <div v-if="this.srcVal != ''" class="btn-div">
+        <button class="down" @click="downloadQR()">{{ "Download" }}</button>
+        <button class="down" @click="shareQR()">{{ "Share" }}</button>
       </div>
     </div>
   </div>
@@ -81,6 +82,19 @@ export default {
       link.download = `${this.textVal}` + ".png";
       link.click();
     },
+    async shareQR() {
+      const shareText = `Generated QR Code: ${this.textVal}. View/download it here: ${this.srcVal}`;
+      const shareData = {
+        title: "QR Code",
+        text: shareText,
+      };
+
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log(err);
+      }
+    },
   },
   watch: {
     textVal(newVal) {
@@ -146,8 +160,7 @@ export default {
 .down {
   color: #fff;
   cursor: pointer;
-  margin-top: 0px;
-  margin-bottom: 5px;
+  margin: 0px 2px 5px 0px;
   font-size: 17px;
   background: #c62f2ff5;
   width: 100%;
@@ -170,6 +183,9 @@ export default {
 }
 .qr-code img {
   width: 170px;
+}
+.btn-div {
+  display: flex;
 }
 
 @media (max-width: 430px) {
