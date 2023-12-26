@@ -6,7 +6,7 @@
       </div>
       <div class="form">
         <input type="text" v-model="textVal" placeholder="Enter text or url" />
-        <button @click="generateQR()">Generate QR</button>
+        <button @click="generateQR()">{{ buttonLabel }}</button>
       </div>
       <div class="qr-code" v-if="this.srcVal != '' && this.textVal != ''">
         <img :src="this.srcVal" alt="qr-code" />
@@ -23,11 +23,17 @@ export default {
     return {
       textVal: "",
       srcVal: "",
+      loading: false,
     };
+  },
+  computed: {
+    buttonLabel() {
+      return this.loading ? "Generating..." : "Generate QR";
+    },
   },
   methods: {
     async generateQR() {
-      console.log("Hi I am inside function");
+      this.loading = true;
       if (this.textVal === "") {
         this.srcVal = "";
         return;
@@ -45,11 +51,8 @@ export default {
         if (response.ok) {
           // Convert the response to a blob
           const blob = await response.blob();
-          console.log(blob);
           // Create a data URL for the blob
           const dataUrl = URL.createObjectURL(blob);
-          console.log(dataUrl);
-          console.log(document.getElementById("qrcodeimg"));
           // Set the src attribute of the image element
           this.srcVal = dataUrl;
         } else {
@@ -59,8 +62,17 @@ export default {
             response.statusText
           );
         }
+        this.loading = false;
       } catch (error) {
+        this.loading = false;
         console.error("Error fetching QR code image:", error.message);
+      }
+    },
+  },
+  watch: {
+    textVal(newVal) {
+      if (newVal === "") {
+        this.srcVal = "";
       }
     },
   },
