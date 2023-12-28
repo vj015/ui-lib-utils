@@ -1,19 +1,36 @@
-# ui-lib-utils
+# shareable-components-poc
 
 ## Project setup
+
 ```
-npm install
+npm install --save ui-lib-utils
 ```
 
-### Compiles and hot-reloads for development
+or
+
 ```
-npm run serve
+yarn add ui-lib-utils
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+## Basic Usage
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+```
+<template>
+  <MyButton
+    background="#fff"
+    color="#000"
+    text="Hello World"
+  /
+  <QRGenerator />
+</template>
+<script>
+import { QRGenerator, MyButton } from "ui-lib-utils";
+
+export default {
+  components:{
+    QRGenerator,
+    MyButton
+  }
+}
+</script>
+```
